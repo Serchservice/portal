@@ -8,23 +8,20 @@ import { RouteInterface } from "../../configuration/Route";
 import Routing from "../../configuration/Routing";
 import TopNavigation from "./TopNavigation";
 import LeftNavigation from "./LeftNavigation";
+import AuthRouting from "../../configuration/AuthRouting";
 
 const MainLayout: React.FC = observer(() => {
     const location = useLocation();
-    console.log(location)
-
     const current = Routing.instance.get(location.pathname);
 
     const redirect = useRedirect();
     React.useEffect(() => {
-        if (authStore.read.isLoggedIn) {
-            console.log("logged in");
-        } else {
-            console.log("not logged in");
+        if (!authStore.read.isLoggedIn) {
+            redirect(AuthRouting.instance.login.path);
         }
     }, [current]);
 
-    const isAdmin = authStore.read.isAdmin || authStore.read.isSuper
+    // const isAdmin = authStore.read.isAdmin || authStore.read.isSuper
 
     const render = (): JSX.Element => {
         if(current) {

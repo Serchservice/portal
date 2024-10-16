@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
-import authStore from '../database/auth/AuthStore';
+// import { Navigate } from 'react-router-dom';
+// import authStore from '../database/auth/AuthStore';
 
 interface SuperAdminMiddlewareProps {
     children: ReactNode;

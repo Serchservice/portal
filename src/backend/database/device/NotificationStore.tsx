@@ -89,12 +89,12 @@ class NotificationStore implements Store<Notification> {
         // });
     }
 
-    private handleNotification = (frame: IFrame): void => {
-        console.log('Notification received:', frame.body);
-        const newNotification = Notification.fromJson(JSON.parse(frame.body));
-        Notify.info(newNotification.message);
-        this.set(newNotification);
-    }
+    // private handleNotification = (frame: IFrame): void => {
+    //     console.log('Notification received:', frame.body);
+    //     const newNotification = Notification.fromJson(JSON.parse(frame.body));
+    //     Notify.info(newNotification.message);
+    //     this.set(newNotification);
+    // }
 
     private updateStore(): void {
         store.set(STORAGE_KEY, JSON.stringify(this.notifications.map(notification => JSON.stringify(notification.toJson()))));
