@@ -1,9 +1,9 @@
-import { IFrame } from '@stomp/stompjs';
+// import { IFrame } from '@stomp/stompjs';
 import { action, computed, makeAutoObservable, observable } from 'mobx';
 import store from 'store2';
 import Store from '../Store';
 import Notification from '../../models/device/Notification';
-import { Notify } from '@serchservice/web-ui-kit';
+// import { Notify } from '@serchservice/web-ui-kit';
 
 const STORAGE_KEY = "notificationDb"
 
