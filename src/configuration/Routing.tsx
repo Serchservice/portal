@@ -2,6 +2,9 @@ import { HomeRoute } from "../app/page";
 import { ProfileRoute } from "../app/profile/page";
 import { PermissionRoute } from "../app/profile/permission/page";
 import { SecurityAndPrivacyRoute } from "../app/profile/security-and-privacy/page";
+import { ComplaintsRoute } from "../app/support/complaints/page";
+import { SupportRoute } from "../app/support/page";
+import { SpeakWithSerchRoute } from "../app/support/speak-with-serch/page";
 import { TeamRoute } from "../app/team/page";
 import { RouteConfig, RouteInterface } from "./Route";
 
@@ -24,6 +27,16 @@ class Routing {
     /// TEAM
     /** Team Route */
     team: RouteInterface = TeamRoute;
+
+    /// SUPPORT
+    /** Support Route */
+    support: RouteInterface = SupportRoute;
+
+    /** Complaints Route */
+    complaint: RouteInterface = ComplaintsRoute;
+
+    /** SpeakWithSerch Route */
+    speakWithSerch: RouteInterface = SpeakWithSerchRoute;
 
     /** Automatically collect all routes */
     getAllRoutes(): RouteInterface[] {

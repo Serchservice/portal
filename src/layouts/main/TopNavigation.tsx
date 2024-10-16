@@ -55,7 +55,9 @@ const SearchView: React.FC = observer(() => {
         setAnchor(undefined);
     };
 
-    const handleSearch = (query: string) => {}
+    const handleSearch = (query: string) => {
+        console.log(query)
+    }
 
     return (
         <React.Fragment>

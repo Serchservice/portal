@@ -46,6 +46,6 @@ export class RouteConfig {
     }
 
     static getRouteFromRole(role: string): string {
-        return ""
+        return `${role}`
     }
 }
