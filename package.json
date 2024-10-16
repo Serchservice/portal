@@ -1,7 +1,7 @@
 {
     "name": "portal",
     "private": true,
-    "version": "0.0.1",
+    "version": "0.0.11",
     "type": "module",
     "proxy": "https://api.serchservice.com/",
     "description": "Admin portal for Serchservice Inc.",
