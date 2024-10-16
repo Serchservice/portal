@@ -334,7 +334,7 @@ export const NavigationLinks: NavigationLinkInterface[] = [
     },
     {
         header: "Support",
-        link: "",
+        link: Routing.instance.support.path,
         icon: 'solar:call-chat-rounded-bold',
         activeIcon: 'solar:call-chat-rounded-bold-duotone',
         options: [
@@ -345,14 +345,14 @@ export const NavigationLinks: NavigationLinkInterface[] = [
                         description: "Have conversations with users using tickets",
                         icon: 'solar:ticket-bold',
                         active: 'solar:ticket-bold-duotone',
-                        link: ""
+                        link: Routing.instance.speakWithSerch.path
                     },
                     {
                         title: "Complaints",
                         description: "See complaints made by users about Serch",
                         icon: 'solar:chat-dots-bold',
                         active: 'solar:chat-dots-bold-duotone',
-                        link: ""
+                        link: Routing.instance.complaint.path
                     }
                 ]
             }

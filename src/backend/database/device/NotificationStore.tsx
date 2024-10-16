@@ -2,7 +2,6 @@ import { IFrame } from '@stomp/stompjs';
 import { action, computed, makeAutoObservable, observable } from 'mobx';
 import store from 'store2';
 import Store from '../Store';
-import Socket from '../../api/Socket';
 import Notification from '../../models/device/Notification';
 import { Notify } from '@serchservice/web-ui-kit';
 
@@ -10,7 +9,6 @@ const STORAGE_KEY = "notificationDb"
 
 class NotificationStore implements Store<Notification> {
     notifications: Notification[] = [];
-    socket: Socket;
 
     constructor() {
         makeAutoObservable(this, {
@@ -29,11 +27,11 @@ class NotificationStore implements Store<Notification> {
             this.notifications = JSON.parse(saved).map((notification: string) => Notification.fromJson(JSON.parse(notification)));
         }
 
-        this.socket = new Socket({
-            endpoint: '/ws:serch', // Adjust endpoint as per your WebSocket configuration
-            callback: this.handleNotification,
-            destination: '/topic/notifications', // Adjust topic as per your server setup
-        });
+        // this.socket = new Socket({
+        //     endpoint: '/ws:serch', // Adjust endpoint as per your WebSocket configuration
+        //     callback: this.handleNotification,
+        //     destination: '/topic/notifications', // Adjust topic as per your server setup
+        // });
     }
 
     get read(): Notification[] {
@@ -49,9 +47,9 @@ class NotificationStore implements Store<Notification> {
         this.notifications = [];
         store.remove(STORAGE_KEY);
         // Make API request via socket to clear all notifications on the server
-        this.socket.send({
-            destination: '/app/notification/clear/all',
-        });
+        // this.socket.send({
+        //     destination: '/app/notification/clear/all',
+        // });
     }
 
     get count(): number {
@@ -63,10 +61,10 @@ class NotificationStore implements Store<Notification> {
         if (notification) {
             notification.status = 'READ';
             // Make API request via socket to mark notification as read on the server
-            this.socket.send({
-                destination: '/app/notification/mark',
-                message: { id },
-            });
+            // this.socket.send({
+            //     destination: '/app/notification/mark',
+            //     message: { id },
+            // });
             this.updateStore();
         }
     }
@@ -76,19 +74,19 @@ class NotificationStore implements Store<Notification> {
         if (index !== -1) {
             this.notifications.splice(index, 1);
             // Make API request via socket to clear notification on the server
-            this.socket.send({
-                destination: '/app/notification/clear',
-                message: { id },
-            });
+            // this.socket.send({
+            //     destination: '/app/notification/clear',
+            //     message: { id },
+            // });
             this.updateStore();
         }
     }
 
     fetchNotifications(): void {
         // Fetch notifications from the server via socket
-        this.socket.send({
-            destination: '/app/notification/all',
-        });
+        // this.socket.send({
+        //     destination: '/app/notification/all',
+        // });
     }
 
     private handleNotification = (frame: IFrame): void => {
