@@ -1,14 +1,14 @@
-import React from "react";
-import { AdminInterface, AdminRoute } from "../page";
-import { observer } from "mobx-react-lite";
 import { ActionButton, Column, Container, Field, Image, Navigate, Notify, Pager, Row, SizedBox, Spacer, Text, Utility, Wrap } from "@serchservice/web-ui-kit";
-import Connect from "../../../../backend/api/Connect";
-import AppTheme from "../../../../configuration/Theme";
-import Utils from "../../../../utils/Utils";
 import { Popup } from "@serchservice/web-ui-kit/build/src/utilities/Notify";
+import { observer } from "mobx-react-lite";
+import React from "react";
+import Connect from "../../../../backend/api/Connect";
+import permissionStore from "../../../../backend/database/device/PermissionStore";
 import AdminScopeResponse from "../../../../backend/models/team/AdminScopeResponse";
 import { RouteConfig } from "../../../../configuration/Route";
-import permissionStore from "../../../../backend/database/device/PermissionStore";
+import AppTheme from "../../../../configuration/Theme";
+import Utils from "../../../../utils/Utils";
+import { AdminInterface } from "../page";
 
 const AdminTeamView: React.FC<AdminInterface> = observer(({ admin, onAdminUpdated }) => {
     const connect = new Connect({})
@@ -74,7 +74,7 @@ const AdminTeamView: React.FC<AdminInterface> = observer(({ admin, onAdminUpdate
                 <Column crossAxis="flex-start" mainAxis="flex-start" crossAxisSize="max">
                     <Text text="Team Information" size={15} color={AppTheme.primary} />
                     <SizedBox height={10} />
-                    <Row style={{gap: "10px"}} crossAxis="center" mainAxisSize="max">
+                    <Row gap="10px" crossAxis="center" mainAxisSize="max">
                         {[
                             {
                                 label: "Position",
@@ -104,7 +104,7 @@ const AdminTeamView: React.FC<AdminInterface> = observer(({ admin, onAdminUpdate
                             )
                         })}
                     </Row>
-                    <Row style={{gap: "20px"}} crossAxis="center" mainAxisSize="max">
+                    <Row gap="20px" crossAxis="center" mainAxisSize="max">
                         <Column>
                             <Field
                                 needLabel
@@ -121,7 +121,7 @@ const AdminTeamView: React.FC<AdminInterface> = observer(({ admin, onAdminUpdate
                             <Column mainAxisSize="min" crossAxisSize="min" crossAxis="flex-start">
                                 <Text text="Available role you can assign" color={AppTheme.primary} size={14} />
                                 <SizedBox height={8} />
-                                <Row crossAxis="center" style={{gap: "10px"}}>
+                                <Row crossAxis="center" gap="10px">
                                     {roles.map((r, index) => {
                                         const isSelected = r === role;
 
@@ -251,7 +251,7 @@ const AdminView: React.FC<AdminViewProps> = observer(({ name, role, id, avatar }
                     backgroundColor={AppTheme.background}
                     borderRadius="24px"
                     minWidth="90px"
-                    onClick={() => Navigate.openInNewTab(RouteConfig.getRoute(AdminRoute, {slug: id}))}
+                    onClick={() => Navigate.openInNewTab(RouteConfig.getAccountRoute("admin", id))}
                     hoverBackgroundColor={AppTheme.hover}
                 >
                     <Text text="View profile" color={AppTheme.primary} size={12} />

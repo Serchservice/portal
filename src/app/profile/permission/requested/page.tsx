@@ -1,39 +1,51 @@
-import { useQuery } from "@tanstack/react-query";
-import Connect from "../../../../backend/api/Connect";
-import Keys from "../../../../backend/api/Keys";
-import { RouteConfig, RouteInterface } from "../../../../configuration/Route";
-import React from "react";
-import GroupRequestedPermission from "../../../../backend/models/permission/GroupRequestedPermission";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import {
     ActionButton, Column, Container, Notify, Pager, Row, SearchBar,
     Shimmer, SizedBox, Spacer, StyledMenu, Text, useDesign, Utility, Wrap
 } from "@serchservice/web-ui-kit";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import authStore from "../../../../backend/database/auth/AuthStore";
-import AppTheme from "../../../../configuration/Theme";
-import preferenceStore from "../../../../backend/database/device/PreferenceStore";
-import Filters, { IFilter, IFilterOption } from "../../../../utils/Filters";
+import { useQuery } from "@tanstack/react-query";
 import { observer } from "mobx-react-lite";
+import React from "react";
+import Connect from "../../../../backend/api/Connect";
+import Keys from "../../../../backend/api/Keys";
+import authStore from "../../../../backend/database/auth/AuthStore";
+import preferenceStore from "../../../../backend/database/device/PreferenceStore";
+import GroupRequestedPermission from "../../../../backend/models/permission/GroupRequestedPermission";
 import RequestedPermission from "../../../../backend/models/permission/RequestedPermission";
-import { PermissionExpiration } from "../../../../widgets/PermissionTable";
-import { AdminRoute } from "../../../team/[slug]/page";
-import RequestedPermissionView from "./modal/RequestedPermissionView";
-import Utils from "../../../../utils/Utils";
+import { RouteConfig, RouteInterface } from "../../../../configuration/Route";
+import AppTheme from "../../../../configuration/Theme";
 import { PermissionStatus } from "../../../../utils/Enums";
+import Filters, { IFilter, IFilterOption } from "../../../../utils/Filters";
+import Utils from "../../../../utils/Utils";
+import { PermissionExpiration } from "../../../../widgets/PermissionTable";
+import Title from "../../../../widgets/Title";
+import RequestedPermissionView from "./modal/RequestedPermissionView";
+import useProfileUpdate from "../../../../configuration/hooks/useProfileUpdate";
 
-export const RequestedPermissionRoute: RouteInterface = {
-    path: "/profile/permission/requested",
-    page: <RequestedPermissionPage />,
+export default function RequestedPermissionRoute(): RouteInterface {
+    return {
+        path: "/profile/permission/requested",
+        page: (
+            <React.Fragment>
+                <Title
+                    title="Requested Permissions"
+                    useDesktopWidth
+                    description="Permissions you've requested and ones you can grant or decline"
+                />
+                <Layout />
+            </React.Fragment>
+        ),
+    }
 }
 
-export default function RequestedPermissionPage() {
+const Layout: React.FC = () => {
     const { isMobile } = useDesign();
     const dimmed = preferenceStore.read.isDark;
 
     const connect = new Connect({});
 
     const { data, isLoading } = useQuery({
-        queryKey: [Keys.LOGGED_IN_ADMIN_REQUESTED_PERMISSIONS],
+        queryKey: [Keys.LOGGED_IN_ADMIN("REQUESTED_PERMISSIONS")],
         queryFn: () => connect.get("/admin/permission/requests")
     })
 
@@ -57,7 +69,7 @@ export default function RequestedPermissionPage() {
 
         if(loading) {
             return (
-                <Column style={{gap: "20px"}}>
+                <Column gap="20px">
                     <SizedBox height={10} />
                     <Column crossAxis="flex-start">
                         <Shimmer height={50} width="100%" radius={12} dimmed={dimmed} />
@@ -71,7 +83,7 @@ export default function RequestedPermissionPage() {
             )
         } else if(requests && requests.length > 0) {
             return (
-                <Column style={{gap: "20px"}}>
+                <Column gap="20px">
                     <RequestListView requests={requests} onUpdated={setRequests} />
                 </Column>
             )
@@ -111,6 +123,19 @@ const RequestListView: React.FC<RequestListViewProps> = observer(({ requests, on
     const handleSearch = React.useCallback((results: GroupRequestedPermission[]) => {
         setList(results);
     }, []);
+
+    const { openPermission, handleOpenPermission, handleClosePermission } = useProfileUpdate()
+    React.useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const id = searchParams.get("id");
+
+        if(id && id !== '') {
+            const found = requests.flatMap(r => r.requests).find(v => v.id === Number(id));
+            if(found) {
+                handleOpenPermission(found)
+            }
+        }
+    }, [location.search])
 
     const [anchor, setAnchor] = React.useState<HTMLButtonElement | undefined>(undefined);
 
@@ -165,7 +190,7 @@ const RequestListView: React.FC<RequestListViewProps> = observer(({ requests, on
                 <Wrap spacing={20} runSpacing={20}>
                     {filtered.map((request, index) => {
                         if(request.requests && request.requests.length > 0) {
-                            return (<RequestView onUpdated={onUpdated} request={request} key={index} />)
+                            return (<RequestView request={request} key={index} />)
                         } else {
                             return (<React.Fragment key={index}></React.Fragment>)
                         }
@@ -223,7 +248,7 @@ const RequestListView: React.FC<RequestListViewProps> = observer(({ requests, on
                     </Wrap>
                     <Spacer />
                     {filter && (
-                        <Row crossAxis="center" mainAxisSize="min" style={{gap: "10px"}}>
+                        <Row crossAxis="center" mainAxisSize="min" gap="10px">
                             <Text text="Current Filter" color={AppTheme.hint} size={13} />
                             <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" style={{backgroundColor: AppTheme.appbar, borderRadius: "10px", padding: "6px 6px 4px", gap: "10px"}}>
                                 <Text text={filter} color={AppTheme.hint} size={13} />
@@ -254,16 +279,23 @@ const RequestListView: React.FC<RequestListViewProps> = observer(({ requests, on
             )}
             {buildResult()}
             <Pager items={list} onSlice={setFiltered} itemsPerPage={10} />
+            {openPermission && (
+                <RequestedPermissionView
+                    isOpen={openPermission !== undefined}
+                    handleClose={() => handleClosePermission()}
+                    permission={openPermission}
+                    onUpdated={onUpdated}
+                />
+            )}
         </React.Fragment>
     )
 })
 
 interface RequestViewProps {
     request: GroupRequestedPermission;
-    onUpdated: (list: GroupRequestedPermission[]) => void
 }
 
-const RequestView: React.FC<RequestViewProps> = observer(({ request, onUpdated }) => {
+const RequestView: React.FC<RequestViewProps> = observer(({ request }) => {
     const [isOpen, setIsOpen] = React.useState(false)
 
     return (
@@ -284,27 +316,33 @@ const RequestView: React.FC<RequestViewProps> = observer(({ request, onUpdated }
                     }} />
                 </Row>
             </Container>
-            {isOpen && (request.requests.map((permission, i) => <Request key={i} permission={permission} onUpdated={onUpdated} />))}
+            {isOpen && (request.requests.map((permission, i) => <Request key={i} permission={permission} />))}
         </Column>
     )
 })
 
 interface RequestProps {
     permission: RequestedPermission;
-    onUpdated: (list: GroupRequestedPermission[]) => void
 }
 
-const Request: React.FC<RequestProps> = observer(({ permission, onUpdated }) => {
-    const [isOpen, setIsOpen] = React.useState(false)
+const Request: React.FC<RequestProps> = observer(({ permission }) => {
+    const { openPermission, handleOpenPermission } = useProfileUpdate()
     const isSpecific = permission.account && permission.account.account !== ""
     const notMe = permission.details && permission.details.admin !== authStore.read.id;
-    const link = notMe ? RouteConfig.getRoute(AdminRoute, {slug: permission.details.admin}) : undefined
+    const link = notMe ? RouteConfig.getAccountRoute("admin", permission.details.admin) : undefined
     const color = permission.isGranted ? AppTheme.success : permission.isPending ? AppTheme.pending : AppTheme.error
     const icon = permission.isGranted ? "duo-icons:check-circle" : permission.isRevoked ? "lets-icons:cancel-duotone" : "solar:clock-circle-bold-duotone"
 
     return (
         <React.Fragment>
-            <Container width="100%" padding="12px" borderRadius="6px" backgroundColor={isOpen ? AppTheme.hover : AppTheme.appbar} hoverBackgroundColor={AppTheme.hover} onClick={() => setIsOpen(true)}>
+            <Container
+                width="100%"
+                padding="12px"
+                borderRadius="6px"
+                backgroundColor={openPermission && openPermission.id === permission.id ? AppTheme.hover : AppTheme.appbar}
+                hoverBackgroundColor={AppTheme.hover}
+                onClick={() => handleOpenPermission(permission)}
+            >
                 <Column style={{gap: "5px"}}>
                     <Row crossAxis="center" mainAxisSize="max">
                         <Column style={{gap: "4px"}}>
@@ -323,7 +361,7 @@ const Request: React.FC<RequestProps> = observer(({ permission, onUpdated }) => 
                     {(permission.expiration && !permission.isRevoked) && (<PermissionExpiration message={permission.expiration} />)}
                     <Row crossAxis="center">
                         <Container borderRadius="6px" backgroundColor={AppTheme.background} padding="5px" link={link}>
-                            <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" style={{gap: "10px"}}>
+                            <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" gap="10px">
                                 <Text text={`Requesting Admin: ${permission.details.name}`} size={12} color={AppTheme.hint} />
                                 {notMe && (<Icon icon="fluent:open-20-filled" width="1em" height="1em" style={{color: AppTheme.hint}} />)}
                             </Row>
@@ -333,7 +371,6 @@ const Request: React.FC<RequestProps> = observer(({ permission, onUpdated }) => 
                     </Row>
                 </Column>
             </Container>
-            <RequestedPermissionView isOpen={isOpen} handleClose={() => setIsOpen(false)} permission={permission} onUpdated={onUpdated} />
         </React.Fragment>
     )
 })

@@ -1,33 +1,31 @@
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { ActionButton, Column, Container, Notify, Shimmer, SizedBox, Text, useDesign, Wrap } from "@serchservice/web-ui-kit";
+import { useQuery } from "@tanstack/react-query";
+import { observer } from "mobx-react-lite";
 import React from "react";
 import Connect from "../../../../backend/api/Connect";
-import { RouteInterface } from "../../../../configuration/Route";
-import { observer } from "mobx-react-lite";
-import { useDesign, Column, SizedBox, Text, Notify, Wrap, Shimmer, ActionButton, Container } from "@serchservice/web-ui-kit";
-import AppTheme from "../../../../configuration/Theme";
-import Title from "../../../../widgets/Title";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import adminStore from "../../../../backend/database/auth/AdminStore";
-import { useQuery } from "@tanstack/react-query";
 import Keys from "../../../../backend/api/Keys";
-import Admin from "../../../../backend/models/profile/Admin";
-import Utils from "../../../../utils/Utils";
-import preferenceStore from "../../../../backend/database/device/PreferenceStore";
+import adminStore from "../../../../backend/database/auth/AdminStore";
 import authStore from "../../../../backend/database/auth/AuthStore";
-import RequestPermission from "./modal/RequestPermission";
+import preferenceStore from "../../../../backend/database/device/PreferenceStore";
+import Admin from "../../../../backend/models/profile/Admin";
+import { RouteInterface } from "../../../../configuration/Route";
+import AppTheme from "../../../../configuration/Theme";
+import Utils from "../../../../utils/Utils";
 import PermissionTable from "../../../../widgets/PermissionTable";
+import Title from "../../../../widgets/Title";
+import RequestPermission from "./modal/RequestPermission";
 
-export const GrantedPermissionRoute: RouteInterface = {
-    path: "/profile/permission/granted",
-    page: <GrantedPermissionPage />,
-}
-
-export default function GrantedPermissionPage() {
-    return (
-        <React.Fragment>
-            <Title title="Granted Permission" />
-            <View />
-        </React.Fragment>
-    )
+export default function GrantedPermissionRoute(): RouteInterface {
+    return {
+        path: "/profile/permission/granted",
+        page: (
+            <React.Fragment>
+                <Title title="Granted Permission" description="Permissions you've been granted as an admin" useDesktopWidth />
+                <View />
+            </React.Fragment>
+        ),
+    }
 }
 
 const View: React.FC = observer(() => {
@@ -38,7 +36,7 @@ const View: React.FC = observer(() => {
     const connect = new Connect({});
 
     const { data, isLoading } = useQuery({
-        queryKey: [Keys.LOGGED_IN_ADMIN_PROFILE],
+        queryKey: [Keys.LOGGED_IN_ADMIN("PROFILE")],
         queryFn: () => connect.get("/admin/profile")
     })
 
@@ -122,7 +120,7 @@ const View: React.FC = observer(() => {
     const buildSpecific = () => {
         if(account.team.specific && account.team.specific.length > 0) {
             return (
-                <Column style={{gap: "20px"}} mainAxisSize="max">
+                <Column gap="20px" mainAxisSize="max">
                     {account.team.specific.map((spec, index) => {
                         return (
                             <React.Fragment key={index}>

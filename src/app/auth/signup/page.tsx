@@ -18,18 +18,16 @@ import Title from "../../../widgets/Title";
 import mfaSetupStore from "../../../backend/database/auth/MFASetupStore";
 import MFASetup from "../../../backend/models/auth/MFASetup";
 
-export const SignupRoute: RouteInterface = {
-    path: "/auth/signup",
-    page: <SignupPage />,
-}
-
-export default function SignupPage() {
-    return (
-        <AuthLayout type="signup">
-            <Title title='Login' />
-            <View />
-        </AuthLayout>
-    )
+export default function SignupRoute(): RouteInterface {
+    return {
+        path: "/auth/signup",
+        page: (
+            <AuthLayout type="signup">
+                <Title title='Signup' description="Create your admin account" />
+                <View />
+            </AuthLayout>
+        ),
+    }
 }
 
 const View: React.FC = observer(() => {

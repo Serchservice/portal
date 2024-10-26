@@ -1,42 +1,71 @@
-import { HomeRoute } from "../app/page";
-import { ProfileRoute } from "../app/profile/page";
-import { PermissionRoute } from "../app/profile/permission/page";
-import { SecurityAndPrivacyRoute } from "../app/profile/security-and-privacy/page";
-import { ComplaintsRoute } from "../app/support/complaints/page";
-import { SupportRoute } from "../app/support/page";
-import { SpeakWithSerchRoute } from "../app/support/speak-with-serch/page";
-import { TeamRoute } from "../app/team/page";
+import HomeRoute from "../app/page";
+import PaymentRoute from "../app/payment/page";
+import PayoutRoute from "../app/payment/payout/page";
+import RevenueRoute from "../app/payment/revenue/page";
+import TransactionRoute from "../app/payment/transaction/page";
+import WalletRoute from "../app/payment/wallet/page";
+import ProfileRoute from "../app/profile/page";
+import GrantedPermissionRoute from "../app/profile/permission/granted/page";
+import RequestedPermissionRoute from "../app/profile/permission/requested/page";
+import SecurityAndPrivacyRoute from "../app/profile/security-and-privacy/page";
+import ComplaintsRoute from "../app/support/complaints/page";
+import SupportRoute from "../app/support/page";
+import SpeakWithSerchRoute from "../app/support/speak-with-serch/page";
+import OrganizationRoute from "../app/team/organization/page";
+import TeamRoute from "../app/team/page";
 import { RouteConfig, RouteInterface } from "./Route";
 
 class Routing {
     static instance = new Routing();
 
     /** Home Route */
-    home: RouteInterface = HomeRoute;
+    home: RouteInterface = HomeRoute();
 
     /// PROFILE
     /** Profile Route */
-    profile: RouteInterface = ProfileRoute;
+    profile: RouteInterface = ProfileRoute();
 
-    /** Profile - Security and Privacy Route */
-    securityAndPrivacy: RouteInterface = SecurityAndPrivacyRoute;
+    /** Profile - Security and Privacy */
+    securityAndPrivacy: RouteInterface = SecurityAndPrivacyRoute();
 
-    /** Profile - Requested Permissions Route */
-    permission: RouteInterface = PermissionRoute;
+    /** Profile - Granted Permission */
+    grantedPermission: RouteInterface = GrantedPermissionRoute();
+
+    /** Profile - Requested Permission */
+    requestedPermission: RouteInterface = RequestedPermissionRoute();
 
     /// TEAM
     /** Team Route */
-    team: RouteInterface = TeamRoute;
+    team: RouteInterface = TeamRoute();
+
+    /** Organization Route */
+    organization: RouteInterface = OrganizationRoute();
 
     /// SUPPORT
     /** Support Route */
-    support: RouteInterface = SupportRoute;
+    support: RouteInterface = SupportRoute();
 
-    /** Complaints Route */
-    complaint: RouteInterface = ComplaintsRoute;
+    /** Support - Speak With Serch */
+    speakWithSerch: RouteInterface = SpeakWithSerchRoute();
 
-    /** SpeakWithSerch Route */
-    speakWithSerch: RouteInterface = SpeakWithSerchRoute;
+    /** Support - Complaint */
+    complaint: RouteInterface = ComplaintsRoute();
+
+    /// PAYMENT
+    /** Payment */
+    payment: RouteInterface = PaymentRoute();
+
+    /** Payment - Transaction */
+    transaction: RouteInterface = TransactionRoute();
+
+    /** Payment - Wallet */
+    wallet: RouteInterface = WalletRoute();
+
+    /** Payment - Payout */
+    payout: RouteInterface = PayoutRoute();
+
+    /** Payment - Revenue */
+    revenue: RouteInterface = RevenueRoute();
 
     /** Automatically collect all routes */
     getAllRoutes(): RouteInterface[] {

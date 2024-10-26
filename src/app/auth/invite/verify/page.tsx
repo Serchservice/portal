@@ -11,18 +11,16 @@ import AppTheme from "../../../../configuration/Theme";
 import mfaSetupStore from "../../../../backend/database/auth/MFASetupStore";
 import MFASetup from "../../../../backend/models/auth/MFASetup";
 
-export const VerifyInviteRoute: RouteInterface = {
-    path: "/auth/invite/verify",
-    page: <VerifyInvitePage />,
-}
-
-export default function VerifyInvitePage() {
-    return (
-        <AuthLayout type="invite-verify">
-            <Title title='Reading Invite Link' description='Wait a moment while we understand this invite link' />
-            <View />
-        </AuthLayout>
-    )
+export default function VerifyInviteRoute(): RouteInterface {
+    return {
+        path: "/auth/invite/verify",
+        page: (
+            <AuthLayout type="invite-verify">
+                <Title title='Reading Invite Link' description='Wait a moment while we understand this invite link' />
+                <View />
+            </AuthLayout>
+        ),
+    }
 }
 
 const View: React.FC = observer(() => {

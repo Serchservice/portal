@@ -24,18 +24,16 @@ import Auth from "../../../../backend/models/auth/Auth";
 import Routing from "../../../../configuration/Routing";
 import preferenceStore from "../../../../backend/database/device/PreferenceStore";
 
-export const VerifyLoginRoute: RouteInterface = {
-    path: "/auth/login/verify",
-    page: <VerifyLoginPage />,
-}
-
-export default function VerifyLoginPage() {
-    return (
-        <AuthLayout type="login-verify">
-            <Title title="Identity Verification" description="Verify yourself with Multi-Factor Authentication" />
-            <View />
-        </AuthLayout>
-    )
+export default function VerifyLoginRoute(): RouteInterface {
+    return {
+        path: "/auth/login/verify",
+        page: (
+            <AuthLayout type="login-verify">
+                <Title title="Identity Verification" description="Verify yourself with Multi-Factor Authentication" />
+                <View />
+            </AuthLayout>
+        ),
+    }
 }
 
 const View: React.FC = observer(() => {

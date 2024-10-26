@@ -1,10 +1,10 @@
-import React from "react";
-import { AdminInterface } from "../page";
-import { observer } from "mobx-react-lite";
 import { ActionButton, Column, Container, Field, Notify, Padding, Row, SimpleStep, SizedBox, Spacer, Text } from "@serchservice/web-ui-kit";
-import AppTheme from "../../../../configuration/Theme";
 import { Popup } from "@serchservice/web-ui-kit/build/src/utilities/Notify";
+import { observer } from "mobx-react-lite";
+import React from "react";
 import Connect from "../../../../backend/api/Connect";
+import AppTheme from "../../../../configuration/Theme";
+import { AdminInterface } from "../page";
 
 const AdminProfileView: React.FC<AdminInterface> = observer(({ admin, onAdminUpdated }) => {
     const connect = new Connect({})
@@ -163,7 +163,7 @@ const AdminProfileView: React.FC<AdminInterface> = observer(({ admin, onAdminUpd
     )
 
     return (
-        <Row mainAxisSize="max" crossAxis="flex-start" style={{gap: "10px"}}>
+        <Row mainAxisSize="max" crossAxis="flex-start" gap="10px">
             {buildTimeline()}
             {buildProfile()}
         </Row>

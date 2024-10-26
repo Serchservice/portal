@@ -1,17 +1,17 @@
-import React from "react";
-import { AdminInterface } from "../page";
-import { observer } from "mobx-react-lite";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import {
     ActionButton, Column, Container, Padding, Pager, Row, SearchBar,
     SimpleStep, SizedBox, Spacer, StyledMenu, Text, Utility, Wrap
 } from "@serchservice/web-ui-kit";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import AppTheme from "../../../../configuration/Theme";
-import Filters, { IFilter, IFilterOption } from "../../../../utils/Filters";
+import { observer } from "mobx-react-lite";
+import React from "react";
 import AccountMFAChallengeResponse from "../../../../backend/models/account/AccountMFAChallengeResponse";
 import AccountMFAResponse from "../../../../backend/models/account/AccountMFAResponse";
+import AppTheme from "../../../../configuration/Theme";
+import Filters, { IFilter, IFilterOption } from "../../../../utils/Filters";
 import TimeUtils from "../../../../utils/TimeUtils";
 import AdminChallengeDetails from "../modals/AdminChallengeDetails";
+import { AdminInterface } from "../page";
 
 const AdminChallengeView: React.FC<AdminInterface> = observer(({ admin }) => {
     const [list, setList] = React.useState<AccountMFAChallengeResponse[]>(admin.challenges)
@@ -76,7 +76,7 @@ const AdminChallengeView: React.FC<AdminInterface> = observer(({ admin }) => {
 
     return (
         <React.Fragment>
-            <Row mainAxisSize="max" crossAxis="flex-start" style={{gap: "20px"}}>
+            <Row mainAxisSize="max" crossAxis="flex-start" gap="20px">
                 <Column style={{gap: "20px", width: "650px"}}>
                     <SearchBar
                         onSearch={handleSearch}
@@ -110,7 +110,7 @@ const AdminChallengeView: React.FC<AdminInterface> = observer(({ admin }) => {
                         })}
                     </Wrap>
                     {filter && (
-                        <Row crossAxis="center" style={{gap: "10px"}}>
+                        <Row crossAxis="center" gap="10px">
                             <Text text="Current Filter" color={AppTheme.hint} size={13} />
                             <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" style={{backgroundColor: AppTheme.appbar, borderRadius: "10px", padding: "6px 6px 4px", gap: "10px"}}>
                                 <Text text={filter} color={AppTheme.hint} size={13} />

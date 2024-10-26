@@ -1,13 +1,13 @@
-import React from "react";
-import { AdminInterface } from "../page";
-import { observer } from "mobx-react-lite";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import { BackdropLoader, Column, Container, Notify, Pager, Row, SizedBox, Spacer, Switcher, Text, Utility, Wrap } from "@serchservice/web-ui-kit";
+import { observer } from "mobx-react-lite";
+import React from "react";
 import Connect from "../../../../backend/api/Connect";
+import AccountDeviceResponse from "../../../../backend/models/account/AccountDeviceResponse";
+import AdminScopeResponse from "../../../../backend/models/team/AdminScopeResponse";
 import AppTheme from "../../../../configuration/Theme";
 import Utils from "../../../../utils/Utils";
-import AdminScopeResponse from "../../../../backend/models/team/AdminScopeResponse";
-import AccountDeviceResponse from "../../../../backend/models/account/AccountDeviceResponse";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { AdminInterface } from "../page";
 
 const AdminAuthenticationView: React.FC<AdminInterface> = observer(({ admin, onAdminUpdated }) => {
     const connect = new Connect({})
@@ -35,12 +35,12 @@ const AdminAuthenticationView: React.FC<AdminInterface> = observer(({ admin, onA
 
     return (
         <React.Fragment>
-            <Row mainAxisSize="max" crossAxis="flex-start" style={{gap: "10px"}}>
+            <Row mainAxisSize="max" crossAxis="flex-start" gap="10px">
                 <Container backgroundColor={AppTheme.appbar} padding="16px" width="100%" borderRadius="8px" height="auto">
                     <Column crossAxis="flex-start" mainAxis="flex-start" crossAxisSize="min">
                         <Text text="Multi-Factor Authentication Options" size={15} color={AppTheme.hint} />
                         <SizedBox height={20} />
-                        <Column crossAxisSize="max" crossAxis="flex-start" style={{gap: "10px"}}>
+                        <Column crossAxisSize="max" crossAxis="flex-start" gap="10px">
                             {[
                                 {
                                     title: "Enabled Multi-Factor Authentication for login access",
@@ -75,7 +75,7 @@ const AdminAuthenticationView: React.FC<AdminInterface> = observer(({ admin, onA
                     <Column crossAxis="flex-start" mainAxis="flex-start" crossAxisSize="min">
                         <Text text="Authentication Status" size={15} color={AppTheme.hint} />
                         <SizedBox height={20} />
-                        <Column crossAxisSize="max" crossAxis="flex-start" style={{gap: "10px"}}>
+                        <Column crossAxisSize="max" crossAxis="flex-start" gap="10px">
                             {[
                                 {
                                     title: "Current Authentication Level",

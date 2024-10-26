@@ -5,20 +5,20 @@ class Keys {
     /** LOCATION IP URL */
     static IP_URL = 'https://api.ipify.org?format=json';
 
-    /** Query Key - For Admin Profile Page */
-    static LOGGED_IN_ADMIN_PROFILE = "ProfilePage";
+    /** Query Key - For Logged In Admin Page Views */
+    static LOGGED_IN_ADMIN = (view: string) => `LoggedInAdmin-${view}`;
 
-    /** Query Key - For Admin Requested Permissions Page */
-    static LOGGED_IN_ADMIN_REQUESTED_PERMISSIONS = "RequestedPermissions";
-
-    /** Query Key - For Security and Privacy Page */
-    static LOGGED_IN_SECURITY_AND_PRIVACY = (type: string) => `SecurityAndPrivacyPage-${type}`;
-
-    /** Query Key - For Team Page */
+    /** Query Key - For Team Page Views */
     static TEAM_PAGE = (view: string) => `TeamPage-${view}`;
 
-    /** Query Key - For Admin Page */
-    static ADMIN_PAGE = (id: string) => `ADMINPAGE-${id}`;
+    /** Query Key - For Admin Page Views */
+    static ADMIN_PAGE = (id: string) => `AdminPage-${id}`;
+
+    /** Query Key - For Support Page Views */
+    static SUPPORT_PAGE = (id: string) => `SupportPage-${id}`;
+
+    /** Query Key - For Payment Page Views */
+    static PAYMENT_PAGE = (id: string) => `PaymentPage-${id}`;
 }
 
 export default Keys;

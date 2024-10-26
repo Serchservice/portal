@@ -1,38 +1,41 @@
-import { useParams } from "react-router-dom";
-import { RouteConfig, RouteInterface, RouteParams } from "../../../configuration/Route";
-import UnauthorizedView from "../../../widgets/UnauthorizedView";
-import React from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import {
     ActionButton, Alert, BackdropLoader, Column, Container, ExtraButton, Image, Navigate, Notify, Row, SizedBox,
     Spacer, StyledMenu, StyledMenuItem, Text, Utility, WebUiKitException, Wrap
 } from "@serchservice/web-ui-kit";
-import { observer } from "mobx-react-lite";
-import Title from "../../../widgets/Title";
 import { useQuery } from "@tanstack/react-query";
+import { observer } from "mobx-react-lite";
+import React from "react";
+import { useParams } from "react-router-dom";
 import Connect from "../../../backend/api/Connect";
 import Keys from "../../../backend/api/Keys";
 import AdminScopeResponse from "../../../backend/models/team/AdminScopeResponse";
+import useAdminUpdate from "../../../configuration/hooks/useAdminUpdate";
+import { RouteConfig, RouteInterface, RouteParams } from "../../../configuration/Route";
 import AppTheme from "../../../configuration/Theme";
+import Utils from "../../../utils/Utils";
+import Title from "../../../widgets/Title";
+import UnauthorizedView from "../../../widgets/UnauthorizedView";
 import CompanyStructureModal from "../modals/CompanyStructureModal";
+import { AdminLoadingBodyView, AdminLoadingHeaderView } from "./loader";
 import AdminAccountAnalyticsView from "./widgets/AdminAccountAnalyticsView";
 import AdminActivityView from "./widgets/AdminActivityView";
 import AdminAuthenticationView from "./widgets/AdminAuthenticationView";
 import AdminChallengeView from "./widgets/AdminChallengeView";
+import AdminPermissionView from "./widgets/AdminPermissionView";
 import AdminProfileView from "./widgets/AdminProfileView";
 import AdminSessionView from "./widgets/AdminSessionView";
 import AdminTeamView from "./widgets/AdminTeamView";
-import Utils from "../../../utils/Utils";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import AdminPermissionView from "./widgets/AdminPermissionView";
-import { AdminLoadingBodyView, AdminLoadingHeaderView } from "./loader";
 
-export const AdminRoute: RouteInterface = {
-    path: "/team/:slug",
-    page: <AdminPage />,
-    pathView: ({slug}) => `/team/${slug}`
+export default function AdminRoute(): RouteInterface {
+    return {
+        path: "/team/:slug",
+        page: <Layout />,
+        pathView: ({slug}) => `/team/${slug}`
+    }
 }
 
-export default function AdminPage() {
+const Layout: React.FC = observer(() => {
     const { slug } = useParams<RouteParams>()
 
     if(slug) {
@@ -40,7 +43,7 @@ export default function AdminPage() {
     } else {
         return (
             <React.Fragment>
-                <Title title="Admin ~ Not Found" />
+                <Title title="Admin ~ Not Found" useDesktopWidth description="We couldn't find any admin for you" />
                 <UnauthorizedView
                     message="Couldn't find the resource you're looking for. Check the link and try again"
                     title="Resource not found"
@@ -49,7 +52,7 @@ export default function AdminPage() {
             </React.Fragment>
         )
     }
-}
+})
 
 interface ViewProps {
     slug: string;
@@ -77,11 +80,11 @@ const View: React.FC<ViewProps> = observer(({slug}) => {
 
     const _buildTitle = (): JSX.Element => {
         if(isLoading) {
-            return (<Title title="Loading admin profile" />)
+            return (<Title title="Loading admin profile" useDesktopWidth description="Fetching the admin data you're looking for" />)
         } else if(!data || !admin) {
-            return (<Title title="Admin ~ Not Found" />)
+            return (<Title title="Admin ~ Not Found" description="We couldn't find any admin for you" useDesktopWidth />)
         } else {
-            return (<Title title={`${admin.profile.name}'s Profile`} />)
+            return (<Title title={`${admin.profile.name}'s Profile`} useDesktopWidth description="View and manage the admin data" />)
         }
     }
 
@@ -132,8 +135,17 @@ const AdminView: React.FC<AdminViewInterface> = observer(({ admin, onAdminUpdate
     }, []);
 
     const tabs = ["Account Analysis", "Profile", "Authentication", "Sessions", "Challenges", "Activities", "Team", "Permissions"]
-    const [tabValue, setTabValue] = React.useState(tabs[0]);
     const [isOpen, setIsOpen] = React.useState<boolean>(false)
+
+    const { openAdminTab, handleAdminTab } = useAdminUpdate()
+    React.useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const view = searchParams.get("view");
+
+        if(view && view !== '') {
+            handleAdminTab(view)
+        }
+    }, [location.search])
 
     const _buildHeader = () => {
         if(!admin) {
@@ -146,7 +158,8 @@ const AdminView: React.FC<AdminViewInterface> = observer(({ admin, onAdminUpdate
                         <Row style={{ overflow: "scroll", width: "660px", backgroundColor: AppTheme.appbar, borderRadius: "16px", padding: "4px"}} mainAxisSize="min">
                             <Row crossAxisSize="max" crossAxis="center" style={{gap: "6px"}}>
                                 {tabs.map((tab, index) => {
-                                    const isSelected = tab === tabValue;
+                                    const isSelected = tab.toUpperCase() === openAdminTab.toUpperCase();
+
                                     return (
                                         <ActionButton
                                             key={index}
@@ -157,7 +170,7 @@ const AdminView: React.FC<AdminViewInterface> = observer(({ admin, onAdminUpdate
                                             hoverBackgroundColor={isSelected ? "#050404" : undefined}
                                             hoverColor={isSelected ? "#ffffff" : undefined}
                                             color={isSelected ? "#ffffff" : AppTheme.hint}
-                                            onClick={() => setTabValue(tab)}
+                                            onClick={() => handleAdminTab(tab)}
                                             title={tab}
                                         />
                                     )
@@ -212,7 +225,7 @@ const AdminView: React.FC<AdminViewInterface> = observer(({ admin, onAdminUpdate
                 <AdminPermissionView admin={admin} onAdminUpdated={onAdminUpdated} />,
             ]
 
-            return (pages[tabs.indexOf(tabValue)])
+            return (pages[tabs.findIndex(d => d.toUpperCase() === openAdminTab.toUpperCase())])
         }
     }
 
@@ -333,7 +346,7 @@ const HeaderView: React.FC<HeaderProps> = observer(({ admin, scrollPosition, onA
                 width="100%"
                 borderRadius={`${calc(12, 4)}px`}
             >
-                <Row mainAxisSize="max" crossAxis="center" style={{gap: "10px"}}>
+                <Row mainAxisSize="max" crossAxis="center" gap="10px">
                     <Container border={`2px dotted ${AppTheme.hint}`} padding="1px" borderRadius="50%" onClick={() => handleChangeAvatar()}>
                         {renderImage()}
                     </Container>
@@ -515,7 +528,7 @@ const ActionView: React.FC<ActionViewProps> = observer(({ admin, onAdminUpdated,
             value: "view_create",
             icon: "lets-icons:send-hor-duotone",
             color: AppTheme.primary,
-            onClick: () => Navigate.openInNewTab(RouteConfig.getRoute(AdminRoute, {slug: creatorLink.id}))
+            onClick: () => Navigate.openInNewTab(RouteConfig.getRoute(AdminRoute(), {slug: creatorLink.id}))
         },
     ];
 
@@ -540,8 +553,8 @@ const ActionView: React.FC<ActionViewProps> = observer(({ admin, onAdminUpdated,
                             renderAsButton={isButton}
                             hoverBackgroundColor={AppTheme.hover}
                         >
-                            <Row crossAxis="center" crossAxisSize="min">
-                                <Icon icon={button.icon} width={0.6} height={0.6} color={button.color} />
+                            <Row crossAxis="center" crossAxisSize="min" style={{gap: "4px"}}>
+                                <Icon icon={button.icon} width="1.2em" height="1.2em" color={button.color} />
                                 <Text text={button.title} color={button.color} size={12} />
                             </Row>
                         </Container>

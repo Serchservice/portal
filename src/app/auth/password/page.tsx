@@ -9,18 +9,16 @@ import Connect from "../../../backend/api/Connect";
 import AuthRouting from "../../../configuration/AuthRouting";
 import Title from "../../../widgets/Title";
 
-export const PasswordRoute: RouteInterface = {
-    path: "/auth/password",
-    page: <PasswordPage />,
-}
-
-export default function PasswordPage() {
-    return (
-        <AuthLayout type="password">
-            <Title title='Reading Reset Password Link' description='Wait a moment while we understand this link' />
-            <View />
-        </AuthLayout>
-    )
+export default function PasswordRoute(): RouteInterface {
+    return {
+        path: "/auth/password",
+        page: (
+            <AuthLayout type="password">
+                <Title title='Reading Reset Password Link' description='Wait a moment while we understand this link' />
+                <View />
+            </AuthLayout>
+        ),
+    }
 }
 
 const View: React.FC = observer(() => {

@@ -1,7 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { RouteInterface } from "../../../configuration/Route"
-import { GrantedPermissionRoute } from "./granted/page";
-import { RequestedPermissionRoute } from "./requested/page";
 import { Column, Container, Row, SizedBox, Text } from "@serchservice/web-ui-kit";
 import React from "react";
 import authStore from "../../../backend/database/auth/AuthStore";
@@ -12,31 +10,25 @@ import Routing from "../../../configuration/Routing";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { PermissionView } from "./parent";
 
-export const PermissionRoute: RouteInterface = {
-    path: "/profile/permission",
-    page: <PermissionPage />,
-    children: [
-        GrantedPermissionRoute,
-        RequestedPermissionRoute
-    ],
-    withParent: true,
-    parent: <PermissionView />
-}
-
-export default function PermissionPage() {
-    return (
-        <React.Fragment>
-            <Titled />
-            <Row mainAxisSize="max" crossAxisSize="max" crossAxis="flex-start" style={{overflow: "hidden"}}>
-                <Navigation />
-                <Outlet />
-            </Row>
-        </React.Fragment>
-    )
+export default function PermissionRoute(): RouteInterface {
+    return {
+        path: "/profile/permission",
+        page: (
+            <React.Fragment>
+                <Titled />
+                <Row mainAxisSize="max" crossAxisSize="max" crossAxis="flex-start" style={{overflow: "hidden"}}>
+                    <Navigation />
+                    <Outlet />
+                </Row>
+            </React.Fragment>
+        ),
+        withParent: true,
+        parent: <PermissionView />
+    }
 }
 
 const Titled: React.FC = observer(() => {
-    return (<Title title={`${authStore.read.firstName}'s Permission`} />)
+    return (<Title title={`${authStore.read.firstName}'s Permission`} useDesktopWidth description="Your permissions and capabilities" />)
 })
 
 const Navigation: React.FC = observer(() => {
@@ -44,12 +36,12 @@ const Navigation: React.FC = observer(() => {
         {
             title: "Granted",
             icon: "duo-icons:confetti",
-            link: GrantedPermissionRoute.path,
+            link: Routing.instance.grantedPermission.path,
         },
         !authStore.read.isTeam && {
             title: "Requested",
             icon: "duo-icons:palette",
-            link: RequestedPermissionRoute.path,
+            link: Routing.instance.requestedPermission.path,
         }
     ]
 

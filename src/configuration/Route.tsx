@@ -1,5 +1,6 @@
 import React from "react";
 import { PermissionType, Role } from "../utils/Enums";
+import AdminRoute from "../app/team/[slug]/page";
 
 export interface RouteParams extends Record<string, string | undefined> {
     slug?: string;
@@ -45,7 +46,14 @@ export class RouteConfig {
         }
     }
 
-    static getRouteFromRole(role: string): string {
+    static getAccountRoute(role?: string, id?: string): string {
+        if(role && id) {
+            const roleValue = role.toLowerCase()
+            if(roleValue.includes("admin") || roleValue.includes("team") || roleValue.includes("manager")) {
+                return this.getRoute(AdminRoute(), {slug: id})
+            }
+        }
+
         return `${role}`
     }
 }

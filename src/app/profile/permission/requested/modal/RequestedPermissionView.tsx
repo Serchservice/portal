@@ -1,20 +1,19 @@
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { MobileDateTimePicker } from "@mui/x-date-pickers";
 import {
     Column, Container, DrawerDialog, ExtraButton, ModalProps, Notify,
     Padding, Row, SimpleStep, SizedBox, Spacer, Text, Utility, Wrap
 } from "@serchservice/web-ui-kit";
-import RequestedPermission from "../../../../../backend/models/permission/RequestedPermission";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import Connect from "../../../../../backend/api/Connect";
-import { RouteConfig } from "../../../../../configuration/Route";
 import authStore from "../../../../../backend/database/auth/AuthStore";
-import AppTheme from "../../../../../configuration/Theme";
-import { AdminRoute } from "../../../../team/[slug]/page";
-import { PermissionExpiration } from "../../../../../widgets/PermissionTable";
-import { Icon } from "@iconify/react/dist/iconify.js";
 import GroupRequestedPermission from "../../../../../backend/models/permission/GroupRequestedPermission";
+import RequestedPermission from "../../../../../backend/models/permission/RequestedPermission";
+import { RouteConfig } from "../../../../../configuration/Route";
+import AppTheme from "../../../../../configuration/Theme";
 import Utils from "../../../../../utils/Utils";
-import { MobileDateTimePicker } from "@mui/x-date-pickers";
+import { PermissionExpiration } from "../../../../../widgets/PermissionTable";
 
 interface RequestedPermissionViewProps extends ModalProps {
     permission: RequestedPermission;
@@ -154,13 +153,13 @@ const RequestedPermissionView: React.FC<RequestedPermissionViewProps> = observer
 
     const isSpecific = permit.account && permit.account.account !== ""
     const requestedByCurrentAdmin = permit.details && permit.details.admin === authStore.read.id;
-    const requestingAdminLink = requestedByCurrentAdmin ? undefined : RouteConfig.getRoute(AdminRoute, {slug: permit.details.admin})
+    const requestingAdminLink = requestedByCurrentAdmin ? undefined : RouteConfig.getAccountRoute("admin", permit.details.admin)
 
     const updatedByCurrentAdmin = permit.details && permit.details.updatedBy && permit.details.updatedBy === authStore.read.id;
     const updatingAdminLink = updatedByCurrentAdmin
         ? undefined
         : permit.details.updatedBy
-            ? RouteConfig.getRoute(AdminRoute, {slug: permit.details.updatedBy})
+            ? RouteConfig.getAccountRoute("admin", permit.details.updatedBy)
             : undefined
 
     const color = permit.isGranted ? AppTheme.success : permit.isPending ? AppTheme.pending : AppTheme.error
@@ -240,7 +239,7 @@ const RequestedPermissionView: React.FC<RequestedPermissionViewProps> = observer
                     </Row>
                 </Container>
                 <Padding all={12}>
-                    <Column style={{gap: "20px"}}>
+                    <Column gap="20px">
                         <Container width="100%">
                             <Text text="Request Information" size={12} color={AppTheme.hint} />
                             <SizedBox height={12} />
@@ -308,8 +307,13 @@ const RequestedPermissionView: React.FC<RequestedPermissionViewProps> = observer
                                 })}
                                 <SizedBox height={6} />
                                 <Row crossAxis="center">
-                                    <Container borderRadius="10px" backgroundColor={AppTheme.background} padding="5px 5px 4px" link={RouteConfig.getRouteFromRole(permit.account.role)}>
-                                        <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" style={{gap: "10px"}}>
+                                    <Container
+                                        borderRadius="10px"
+                                        backgroundColor={AppTheme.background}
+                                        padding="5px 5px 4px"
+                                        link={RouteConfig.getAccountRoute(permit.account.role, permit.account.account)}
+                                    >
+                                        <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" gap="10px">
                                             <Text text="View profile" size={11} color={AppTheme.hint} />
                                             <Icon icon="fluent:open-20-filled" width="0.7em" height="0.7em" style={{color: AppTheme.hint}} />
                                         </Row>
@@ -343,7 +347,7 @@ const RequestedPermissionView: React.FC<RequestedPermissionViewProps> = observer
                                 <SizedBox height={6} />
                                 <Row crossAxis="center">
                                     <Container borderRadius="10px" backgroundColor={AppTheme.background} padding="5px 5px 4px" link={requestingAdminLink}>
-                                        <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" style={{gap: "10px"}}>
+                                        <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" gap="10px">
                                             <Text text="View profile" size={11} color={AppTheme.hint} />
                                             <Icon icon="fluent:open-20-filled" width="0.7em" height="0.7em" style={{color: AppTheme.hint}} />
                                         </Row>
@@ -377,7 +381,7 @@ const RequestedPermissionView: React.FC<RequestedPermissionViewProps> = observer
                                 <SizedBox height={6} />
                                 <Row crossAxis="center">
                                     <Container borderRadius="10px" backgroundColor={AppTheme.background} padding="5px 5px 4px" link={updatingAdminLink}>
-                                        <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" style={{gap: "10px"}}>
+                                        <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" gap="10px">
                                             <Text text="View profile" size={11} color={AppTheme.hint} />
                                             <Icon icon="fluent:open-20-filled" width="0.7em" height="0.7em" style={{color: AppTheme.hint}} />
                                         </Row>

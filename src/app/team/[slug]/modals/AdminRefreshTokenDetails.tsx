@@ -161,7 +161,7 @@ const AdminRefreshTokenView: React.FC<RefreshTokenViewProps> = observer(({
                     </Row>
                 </Container>
                 <Padding all={16}>
-                    <Column crossAxis="flex-start" style={{gap: "20px"}}>
+                    <Column crossAxis="flex-start" gap="20px">
                         <Container width="100%">
                             <Text text="Token Timeline" size={12} color={AppTheme.hint} />
                             <SizedBox height={12} />
@@ -210,7 +210,7 @@ const AdminRefreshTokenView: React.FC<RefreshTokenViewProps> = observer(({
                                         }
                                         height={10}
                                         color={AppTheme.hint}
-                                        showBottom={steps.length - 1 !== index}
+                                        showBottom={details.length - 1 !== index}
                                     />
                                 )
                             })}

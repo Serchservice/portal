@@ -1,25 +1,7 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import {
-    ActionButton,
-    Column,
-    Container,
-    CopyButton,
-    DrawerDialog,
-    Expanded,
-    Field,
-    Image,
-    ModalProps,
-    Notify,
-    Padding,
-    Pager,
-    Row,
-    SimpleStep,
-    SizedBox,
-    Spacer,
-    Text,
-    useDesign,
-    Utility,
-    Wrap
+    ActionButton, Column, Container, CopyButton, DrawerDialog, Expanded, Field, Image, ModalProps,
+    Notify, Padding, Pager, Row, SimpleStep, SizedBox, Spacer, Text, useDesign, Utility, Wrap
 } from "@serchservice/web-ui-kit";
 import { Popup } from "@serchservice/web-ui-kit/build/src/utilities/Notify";
 import { useQuery } from "@tanstack/react-query";
@@ -35,17 +17,23 @@ import AppTheme from "../../configuration/Theme";
 import Utils from "../../utils/Utils";
 import Title from "../../widgets/Title";
 import ProfilePageLoader from "./loader";
+import PermissionRoute from "./permission/page";
 
-export const ProfileRoute: RouteInterface = {
-    path: "/profile",
-    page: <ProfilePage />,
+export default function ProfileRoute(): RouteInterface {
+    return {
+        path: "/profile",
+        page: <Layout />,
+        children: [
+            PermissionRoute()
+        ]
+    }
 }
 
-export default function ProfilePage() {
+const Layout: React.FC = () => {
     const connect = new Connect({});
 
     const { data, isLoading } = useQuery({
-        queryKey: [Keys.LOGGED_IN_ADMIN_PROFILE],
+        queryKey: [Keys.LOGGED_IN_ADMIN("PROFILE")],
         queryFn: () => connect.get("/admin/profile")
     })
 
@@ -89,7 +77,7 @@ export default function ProfilePage() {
 }
 
 const Titled: React.FC = observer(() => {
-    return (<Title title={`${authStore.read.firstName}'s Profile`} />)
+    return (<Title title={`${authStore.read.firstName}'s Profile`} useDesktopWidth description="Your profile, your settings" />)
 })
 
 const LeftView: React.FC = observer(() => {

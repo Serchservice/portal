@@ -11,6 +11,7 @@ import Utils from "../../../utils/Utils";
 import permissionStore from "../../../backend/database/device/PermissionStore";
 import { GrantedPermissionScopeResponse, IGrantedPermissionScopeResponse } from "../../../backend/models/permission/GrantedPermissionScopeResponse";
 import preferenceStore from "../../../backend/database/device/PreferenceStore";
+import adminStore from "../../../backend/database/auth/AdminStore";
 
 const InviteAdminModal: React.FC<ModalProps> = observer(({isOpen, handleClose}) => {
     const connect = new Connect({})
@@ -70,7 +71,10 @@ const InviteAdminModal: React.FC<ModalProps> = observer(({isOpen, handleClose}) 
             const scopeList = [];
             for (const [key, permissions] of Object.entries(scopes)) {
                 const formattedKey = key.toUpperCase().replace(/\s+/g, '_');
-                const formattedPermissions = permissions.map(permission => permission.toUpperCase());
+                const formattedPermissions = permissions.map(permission => ({
+                    permission: permission.toUpperCase(),
+                    reason: `${adminStore.read.name} wants to grant this permission to the new account holder ${firstName}`
+                }));
                 scopeList.push({ scope: formattedKey, permissions: formattedPermissions });
             }
 

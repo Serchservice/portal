@@ -6,8 +6,9 @@ import { AdminActivityResponse } from "../../../../backend/models/team/AdminActi
 import AppTheme from "../../../../configuration/Theme";
 import Filters, { IFilter, IFilterOption } from "../../../../utils/Filters";
 import TimeUtils from "../../../../utils/TimeUtils";
-import { AdminInterface, AdminRoute } from "../page";
+import { AdminInterface } from "../page";
 import { RouteConfig } from "../../../../configuration/Route";
+import AdminScopeResponse from "../../../../backend/models/team/AdminScopeResponse";
 
 const AdminActivityView: React.FC<AdminInterface> = observer(({ admin }) => {
     const [list, setList] = React.useState<AdminActivityResponse[]>(admin.activities)
@@ -51,9 +52,9 @@ const AdminActivityView: React.FC<AdminInterface> = observer(({ admin }) => {
         if(filtered.length > 0) {
             return (
                 <React.Fragment>
-                    {filtered.map((activity, index) => {
-                        return (<Activity key={index} activity={activity} showLine={filtered.length - 1 !== index} />)
-                    })}
+                    {filtered.map((activity, index) =>
+                        <Activity key={index} admin={admin} activity={activity} showLine={filtered.length - 1 !== index} />
+                    )}
                 </React.Fragment>
             )
         } else {
@@ -126,7 +127,7 @@ const AdminActivityView: React.FC<AdminInterface> = observer(({ admin }) => {
             )}
             {filter && (<SizedBox height={10} />)}
             {filter && (
-                <Row crossAxis="center" style={{gap: "10px"}}>
+                <Row crossAxis="center" gap="10px">
                     <Text text="Current Filter" color={AppTheme.hint} size={13} />
                     <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" style={{backgroundColor: AppTheme.appbar, borderRadius: "10px", padding: "6px 6px 4px", gap: "10px"}}>
                         <Text text={filter} color={AppTheme.hint} size={13} />
@@ -145,10 +146,11 @@ const AdminActivityView: React.FC<AdminInterface> = observer(({ admin }) => {
 
 interface ActivityProps {
     activity: AdminActivityResponse;
+    admin: AdminScopeResponse;
     showLine: boolean;
 }
 
-const Activity: React.FC<ActivityProps> = observer(({ activity, showLine }) => {
+const Activity: React.FC<ActivityProps> = observer(({ activity, showLine, admin }) => {
     // State to hold the calculated height of the content
     const [calculatedHeight, setCalculatedHeight] = React.useState(50);
 
@@ -163,6 +165,8 @@ const Activity: React.FC<ActivityProps> = observer(({ activity, showLine }) => {
             setCalculatedHeight(height); // Update the state with the content's height
         }
     }, []);
+
+    const showAssociated = activity.associated && activity.associated !== admin.profile.id;
 
     return (
         <Row crossAxisSize="min" crossAxis="flex-start" mainAxisSize="max" style={{gap: "5px"}}>
@@ -182,11 +186,11 @@ const Activity: React.FC<ActivityProps> = observer(({ activity, showLine }) => {
                 {activity.activity && (<Container backgroundColor={AppTheme.hover} height="2px" width="50%" padding="2px" borderRadius="12px" />)}
                 {activity.activity && (<SizedBox height={10} />)}
                 {activity.activity && (<Text text={activity.activity} color={AppTheme.primary} size={13} />)}
-                {activity.associated && (<SizedBox height={15} />)}
-                {activity.associated && (
+                {showAssociated && (<SizedBox height={15} />)}
+                {showAssociated && (
                     <Row>
-                        <Container borderRadius="6px" backgroundColor={AppTheme.background} padding="5px" link={RouteConfig.getRoute(AdminRoute, {slug: activity.associated})}>
-                            <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" style={{gap: "10px"}}>
+                        <Container borderRadius="6px" backgroundColor={AppTheme.background} padding="5px" link={RouteConfig.getAccountRoute("admin", activity.associated)}>
+                            <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" gap="10px">
                                 <Text text={`Associated Account: ${activity.tag || activity.associated}`} size={12} color={AppTheme.hint} />
                                 <Icon icon="fluent:open-20-filled" width="1em" height="1em" style={{color: AppTheme.hint}} />
                             </Row>
