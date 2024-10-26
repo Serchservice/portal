@@ -17,19 +17,17 @@ import AppTheme from "../../../configuration/Theme"
 import Title from "../../../widgets/Title"
 import preferenceStore from "../../../backend/database/device/PreferenceStore"
 
-export const InviteRoute: RouteInterface = {
-    path: "/auth/invite",
-    pathView: ({name, token}) => `/auth/invite?name=${name}&token=${token}`,
-    page: <InvitePage />,
-}
-
-export default function InvitePage() {
-    return (
-        <AuthLayout type="invite">
-            <Title title='Account Setup' />
-            <View />
-        </AuthLayout>
-    )
+export default function InviteRoute(): RouteInterface {
+    return {
+        path: "/auth/invite",
+        pathView: ({name, token}) => `/auth/invite?name=${name}&token=${token}`,
+        page: (
+            <AuthLayout type="invite">
+                <Title title='Account Setup' description="Finish your admin account setup to start doing big things" />
+                <View />
+            </AuthLayout>
+        ),
+    }
 }
 
 const View: React.FC = observer(() => {

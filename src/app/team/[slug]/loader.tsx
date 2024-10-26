@@ -1,8 +1,8 @@
 import { Column, Container, Row, Shimmer, SizedBox, Spacer, Utility, Wrap } from "@serchservice/web-ui-kit";
 import { observer } from "mobx-react-lite";
 import React from "react";
-import AppTheme from "../../../configuration/Theme";
 import preferenceStore from "../../../backend/database/device/PreferenceStore";
+import AppTheme from "../../../configuration/Theme";
 
 interface LoadingHeaderViewProps {
     scrollPosition: number;
@@ -25,7 +25,7 @@ export const AdminLoadingHeaderView: React.FC<LoadingHeaderViewProps> = observer
                 width="100%"
                 borderRadius={`${calc(12, 4)}px`}
             >
-                <Row mainAxisSize="max" crossAxis="center" style={{gap: "10px"}}>
+                <Row mainAxisSize="max" crossAxis="center" gap="10px">
                     <Shimmer height={calc(90, 55)} width={calc(90, 55)} radius={4} type="circular" dimmed={dimmed} />
                     <Column mainAxisSize="max" crossAxis="flex-start">
                         <Row crossAxis="center" mainAxisSize="max" mainAxis="space-between">

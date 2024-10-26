@@ -6,7 +6,7 @@ import { CompanyStructureResponse } from "../../../backend/models/team/CompanySt
 import { RouteConfig } from "../../../configuration/Route";
 import AppTheme from "../../../configuration/Theme";
 import { Role } from "../../../utils/Enums";
-import { AdminRoute } from "../[slug]/page";
+import AdminRoute from "../[slug]/page";
 
 interface CompanyStructureModalProps extends ModalProps {
     structure: CompanyStructureResponse;
@@ -47,11 +47,11 @@ const CompanyStructureModal: React.FC<CompanyStructureModalProps> = observer(({
 
     function getLink(role: Role, id: string): string | undefined {
         if((role === Role.SUPER || role === Role.ADMIN) && authStore.read.isSuper) {
-            return RouteConfig.getRoute(AdminRoute, {slug: id})
+            return RouteConfig.getRoute(AdminRoute(), {slug: id})
         } else if(role === Role.MANAGER && (authStore.read.isSuper || authStore.read.isAdmin)) {
-            return RouteConfig.getRoute(AdminRoute, {slug: id})
+            return RouteConfig.getRoute(AdminRoute(), {slug: id})
         } else if(role === Role.TEAM && (authStore.read.isSuper || authStore.read.isAdmin || authStore.read.isManager)) {
-            return RouteConfig.getRoute(AdminRoute, {slug: id})
+            return RouteConfig.getRoute(AdminRoute(), {slug: id})
         }
     }
 

@@ -18,18 +18,16 @@ import AuthRouting from "../../../configuration/AuthRouting";
 import Title from "../../../widgets/Title";
 import Utils from "../../../utils/Utils";
 
-export const LoginRoute: RouteInterface = {
-    path: "/auth/login",
-    page: <LoginPage />,
-}
-
-export default function LoginPage() {
-    return (
-        <AuthLayout type="login">
-            <Title title='Login' />
-            <View />
-        </AuthLayout>
-    )
+export default function LoginRoute(): RouteInterface {
+    return {
+        path: "/auth/login",
+        page: (
+            <AuthLayout type="login">
+                <Title title='Login' description="Get back into action, admin" />
+                <View />
+            </AuthLayout>
+        ),
+    }
 }
 
 const View: React.FC = observer(() => {

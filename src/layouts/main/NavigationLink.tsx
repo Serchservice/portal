@@ -294,7 +294,7 @@ export const NavigationLinks: NavigationLinkInterface[] = [
     },
     {
         header: "Payment",
-        link: "",
+        link: Routing.instance.payment.path,
         icon: 'solar:wallet-bold',
         activeIcon: 'solar:wallet-bold-duotone',
         options: [
@@ -302,31 +302,31 @@ export const NavigationLinks: NavigationLinkInterface[] = [
                 links: [
                     {
                         title: "Revenue",
-                        description: "See details on how much Serch is making",
+                        description: "Accounting details on cashback",
                         icon: 'solar:wallet-money-bold',
                         active: 'solar:wallet-money-bold-duotone',
-                        link: ""
+                        link: Routing.instance.revenue.path
                     },
                     {
                         title: "Transactions",
                         description: "View and handle user transactions",
                         icon: 'solar:documents-bold',
                         active: 'solar:documents-bold-duotone',
-                        link: ""
+                        link: Routing.instance.transaction.path
                     },
                     {
-                        title: "Withdraw Requests",
+                        title: "Payouts",
                         description: "View and process user withdrawals",
                         icon: 'solar:case-round-minimalistic-bold',
                         active: 'solar:case-round-minimalistic-bold-duotone',
-                        link: ""
+                        link: Routing.instance.payout.path
                     },
                     {
                         title: "Wallets",
-                        description: "View in-depth on user's wallet",
+                        description: "Take an in-depth view on user's wallet",
                         icon: 'solar:card-2-bold',
                         active: 'solar:card-2-bold-duotone',
-                        link: ""
+                        link: Routing.instance.wallet.path
                     }
                 ]
             }
@@ -381,6 +381,19 @@ export const NavigationLinks: NavigationLinkInterface[] = [
         header: "Team Serch",
         link: Routing.instance.team.path,
         icon: 'solar:shield-user-bold',
-        activeIcon: 'solar:shield-user-bold-duotone'
+        activeIcon: 'solar:shield-user-bold-duotone',
+        options: [
+            {
+                links: [
+                    {
+                        title: "Organization",
+                        description: "View, add, delete and update organization member data",
+                        icon: 'uis:user-arrows',
+                        active: 'uim:user-arrows',
+                        link: Routing.instance.organization.path
+                    }
+                ]
+            }
+        ]
     }
 ]

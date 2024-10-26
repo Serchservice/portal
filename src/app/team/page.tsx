@@ -20,41 +20,46 @@ import AppTheme from "../../configuration/Theme";
 import Utils from "../../utils/Utils";
 import { Metric } from "../../widgets/Metrics";
 import Title from "../../widgets/Title";
-import { AdminRoute } from "./[slug]/page";
 import { TeamActivitiesLoader, TeamHeaderLoader, TeamListLoader, TeamMetricLoader } from "./loader";
 import CompanyStructureModal from "./modals/CompanyStructureModal";
 import InviteAdminModal from "./modals/InviteAdminModal";
+import AdminRoute from "./[slug]/page";
+import useAdminUpdate from "../../configuration/hooks/useAdminUpdate";
 
-export const TeamRoute: RouteInterface = {
-    path: "/team",
-    page: <TeamPage />,
-    children: [
-        AdminRoute
-    ]
+export default function TeamRoute(): RouteInterface {
+    return {
+        path: "/team",
+        page: (
+            <React.Fragment>
+                <Title title="Team Overview" useDesktopWidth description="View and manage team information in the portal" />
+                <Layout />
+            </React.Fragment>
+        ),
+        children: [
+            AdminRoute()
+        ]
+    }
 }
 
-export default function TeamPage() {
+const Layout: React.FC = observer(() => {
     const [totalAdministrators, setTotalAdministrators] = React.useState<number>()
     const [activities, setActivities] = React.useState<AdminActivityResponse[]>()
     const [structure, setStructure] = React.useState<CompanyStructureResponse>()
 
     return (
-        <React.Fragment>
-            <Title title="Team Overview" />
-            <Column mainAxisSize="max" crossAxisSize="max" mainAxis="flex-start" crossAxis="flex-start" style={{gap: "5px", padding: "8px 8px 0", overflow: "hidden"}}>
-                <HeaderView totalAdministrators={totalAdministrators} structure={structure} />
-                <MetricView
-                    onFetchStructure={setStructure}
-                    onFetchActivities={setActivities}
-                    onFetchTotalAdministrators={setTotalAdministrators}
-                />
-                <Column style={{overflow: "scroll"}}>
-                    <BodyView activities={activities} />
-                </Column>
+        <Column mainAxisSize="max" crossAxisSize="max" mainAxis="flex-start" crossAxis="flex-start" style={{gap: "5px", padding: "8px 8px 0", overflow: "hidden"}}>
+            <HeaderView totalAdministrators={totalAdministrators} structure={structure} />
+            <MetricView
+                onFetchStructure={setStructure}
+                onFetchActivities={setActivities}
+                onFetchTotalAdministrators={setTotalAdministrators}
+            />
+            <Column style={{overflow: "scroll"}}>
+                <BodyView activities={activities} />
             </Column>
-        </React.Fragment>
+        </Column>
     )
-}
+})
 
 interface HeaderViewProps {
     totalAdministrators: number | undefined;
@@ -260,7 +265,6 @@ interface AdminListViewProps {
 }
 
 const AdminListView: React.FC<AdminListViewProps> = observer(({admins}) => {
-    const [active, setActive] = React.useState<string>(admins?.[0]?.role ?? "");
     const [activeList, setActiveList] = React.useState<AdminProfile[]>(admins?.[0]?.admins ?? []);
     const [filtered, setFiltered] = React.useState<AdminProfile[]>(activeList);
 
@@ -268,11 +272,26 @@ const AdminListView: React.FC<AdminListViewProps> = observer(({admins}) => {
         setFiltered(results);
     }, []);
 
+    const { openTeamTab, handleTeamTab } = useAdminUpdate()
+    React.useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const view = searchParams.get("view");
+
+        if(view && view !== '') {
+            handleTeamTab(view)
+
+            const found = admins.find((i) => i.role.toUpperCase() === view.toUpperCase());
+            if(found) {
+                setActiveList(found.admins)
+            }
+        }
+    }, [location.search])
+
     return (
         <React.Fragment>
             <Wrap crossAxisAlignment="center" spacing={10} runSpacing={10}>
                 {admins.map((filter, index) => {
-                    const isSelected = filter.role === active;
+                    const isSelected = filter.role.toUpperCase() === openTeamTab.toUpperCase();
 
                     return (
                         <ActionButton
@@ -283,7 +302,7 @@ const AdminListView: React.FC<AdminListViewProps> = observer(({admins}) => {
                             fontSize={11}
                             color={isSelected ? AppTheme.secondary : AppTheme.hint}
                             onClick={() => {
-                                setActive(filter.role)
+                                handleTeamTab(filter.role)
 
                                 const found = admins.find((i) => i.role === filter.role);
                                 if(found) {
@@ -364,17 +383,17 @@ const AdminView: React.FC<AdminViewProps> = observer(({admin}) => {
             borderRadius="10px"
             padding="12px"
             width={width <= 800 ? "100%" : "250px"}
-            link={RouteConfig.getRoute(AdminRoute, {slug: admin.id})}
+            link={RouteConfig.getAccountRoute(admin.role, admin.id)}
             elevation={elevation}
             onHover={v => v ? setElevation(4) : setElevation(0)}
         >
             {renderImage()}
             <SizedBox height={10} />
-            <Text text={admin.name} size={14} color={AppTheme.primary} />
+            <Text text={admin.name} flow="ellipsis" size={14} color={AppTheme.primary} />
             <SizedBox height={7} />
             <Text text={Utils.clearRole(admin.role)} size={10} color={AppTheme.primary} />
             <SizedBox height={20} />
-            <Text text={admin.emailAddress} size={10} color={AppTheme.primary} />
+            <Text text={admin.emailAddress} size={10} flow="ellipsis" color={AppTheme.primary} />
             <SizedBox height={7} />
             <Text text={admin.lastSignedIn} size={10} color={AppTheme.primary} />
             <SizedBox height={7} />

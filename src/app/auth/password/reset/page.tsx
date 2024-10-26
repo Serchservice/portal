@@ -18,19 +18,17 @@ import Auth from "../../../../backend/models/auth/Auth";
 import AuthRouting from "../../../../configuration/AuthRouting";
 import preferenceStore from "../../../../backend/database/device/PreferenceStore";
 
-export const ResetPasswordRoute: RouteInterface = {
-    path: "/auth/password/reset",
-    pathView: ({name, emailAddress, token}) => `/auth/password/reset?name=${name}&emailAddress=${emailAddress}&token=${token}`,
-    page: <ResetPasswordPage />,
-}
-
-export default function ResetPasswordPage() {
-    return (
-        <AuthLayout type="password-reset">
-            <Title title='Reset Password' />
-            <View />
-        </AuthLayout>
-    )
+export default function  ResetPasswordRoute(): RouteInterface {
+    return {
+        path: "/auth/password/reset",
+        pathView: ({name, emailAddress, token}) => `/auth/password/reset?name=${name}&emailAddress=${emailAddress}&token=${token}`,
+        page: (
+            <AuthLayout type="password-reset">
+                <Title title='Reset Password' />
+                <View />
+            </AuthLayout>
+        ),
+    }
 }
 
 const View: React.FC = observer(() => {

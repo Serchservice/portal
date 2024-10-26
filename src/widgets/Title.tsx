@@ -4,9 +4,10 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 interface TitleProps {
     title?: string;
     description?: string;
+    useDesktopWidth?: boolean;
 }
 
-const Title: React.FC<TitleProps> = ({ title = "", description = "" }) => {
+const Title: React.FC<TitleProps> = ({ title = "", description = "", useDesktopWidth = false }) => {
     const ogTitle = `${title} | Serch Admin`;
     const logo = "https://wyvcjsumdfoamsmdzsna.supabase.co/storage/v1/object/public/serch/logo/black/squared.png"
 
@@ -20,6 +21,7 @@ const Title: React.FC<TitleProps> = ({ title = "", description = "" }) => {
                 <meta name="keywords" content="Serch" />
                 <meta name="creator" content="Team Serch" />
                 <meta name="robots" content="index, follow" />
+                {useDesktopWidth && (<meta name="viewport" content="width=1024" />)}
                 <link rel="canonical" href="https://www.serchservice.com" />
                 <meta name="classification" content="RequestSharing and ProvideSharing" />
                 <meta name="category" content="RequestSharing and ProvideSharing" />

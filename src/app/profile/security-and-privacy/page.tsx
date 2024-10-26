@@ -6,22 +6,8 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import Title from "../../../widgets/Title";
 import {
-    ActionButton,
-    CircularIconButton,
-    Column,
-    Container,
-    CopyButton,
-    Notify,
-    PasswordField,
-    Row,
-    Shimmer,
-    SizedBox,
-    Spacer,
-    Switcher,
-    Text,
-    useDesign,
-    Utility,
-    Wrap
+    ActionButton, CircularIconButton, Column, Container, CopyButton, Notify, PasswordField,
+    Row, Shimmer, SizedBox, Spacer, Switcher, Text, useDesign, Utility, Wrap
 } from "@serchservice/web-ui-kit";
 import { MFARecoveryCode, MFAUsage } from "../../../backend/models/auth/MFA";
 import mfaStore from "../../../backend/database/auth/MFAStore";
@@ -34,32 +20,30 @@ import Auth from "../../../backend/models/auth/Auth";
 import adminStore from "../../../backend/database/auth/AdminStore";
 import Admin from "../../../backend/models/profile/Admin";
 
-export const SecurityAndPrivacyRoute: RouteInterface = {
-    path: "/profile/security-and-privacy",
-    page: <SecurityAndPrivacyPage />,
-}
-
-export default function SecurityAndPrivacyPage() {
-    return (
-        <React.Fragment>
-            <Title title="Security and Privacy" />
-            <Column mainAxisSize="max" crossAxisSize="max" style={{padding: "24px", overflow: "scroll"}}>
-                <Column>
-                    <Row mainAxisSize="max" crossAxisSize="max" crossAxis="flex-start">
-                        <MFAStatisticsView />
-                        <SizedBox width={30} />
-                        <MFARecoveryView />
-                    </Row>
-                    <SizedBox height={80} />
-                    <Row mainAxisSize="max" crossAxisSize="max" crossAxis="flex-start">
-                        <PasswordView />
-                        <SizedBox width={30} />
-                        <ChangePasswordView />
-                    </Row>
+export default function SecurityAndPrivacyRoute(): RouteInterface {
+    return {
+        path: "/profile/security-and-privacy",
+        page: (
+            <React.Fragment>
+                <Title title="Security and Privacy" useDesktopWidth description="Manage your security settings for a secure account" />
+                <Column mainAxisSize="max" crossAxisSize="max" style={{padding: "24px", overflow: "scroll"}}>
+                    <Column>
+                        <Row mainAxisSize="max" crossAxisSize="max" crossAxis="flex-start">
+                            <MFAStatisticsView />
+                            <SizedBox width={30} />
+                            <MFARecoveryView />
+                        </Row>
+                        <SizedBox height={80} />
+                        <Row mainAxisSize="max" crossAxisSize="max" crossAxis="flex-start">
+                            <PasswordView />
+                            <SizedBox width={30} />
+                            <ChangePasswordView />
+                        </Row>
+                    </Column>
                 </Column>
-            </Column>
-        </React.Fragment>
-    )
+            </React.Fragment>
+        ),
+    }
 }
 
 const MFAStatisticsView: React.FC = observer(() => {
@@ -68,7 +52,7 @@ const MFAStatisticsView: React.FC = observer(() => {
     const connect = new Connect({});
 
     const { data, isLoading, error } = useQuery({
-        queryKey: [Keys.LOGGED_IN_SECURITY_AND_PRIVACY("MFA-STATS")],
+        queryKey: [Keys.LOGGED_IN_ADMIN("MFA-STATS")],
         queryFn: () => connect.get<MFAUsage>("/auth/mfa/usage")
     })
 
@@ -145,7 +129,7 @@ const MFARecoveryView: React.FC = observer(() => {
     const connect = new Connect({})
 
     const { data, isLoading, error } = useQuery({
-        queryKey: [Keys.LOGGED_IN_SECURITY_AND_PRIVACY("MFA-CODES")],
+        queryKey: [Keys.LOGGED_IN_ADMIN("MFA-CODES")],
         queryFn: () => connect.get<MFARecoveryCode[]>("/auth/mfa/recovery/codes")
     })
 
@@ -248,7 +232,7 @@ const PasswordView: React.FC = observer(() => {
     const connect = new Connect({});
 
     const { data, isLoading } = useQuery({
-        queryKey: [Keys.LOGGED_IN_ADMIN_PROFILE],
+        queryKey: [Keys.LOGGED_IN_ADMIN("PROFILE")],
         queryFn: () => connect.get("/admin/profile")
     })
 

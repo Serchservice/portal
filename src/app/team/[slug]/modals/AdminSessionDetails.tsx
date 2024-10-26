@@ -4,12 +4,12 @@ import {
 } from "@serchservice/web-ui-kit";
 import { observer } from "mobx-react-lite";
 import React from "react";
+import Connect from "../../../../backend/api/Connect";
 import AccountSessionResponse from "../../../../backend/models/account/AccountSessionResponse";
 import { AdminProfile } from "../../../../backend/models/profile/AdminProfile";
 import AppTheme from "../../../../configuration/Theme";
 import TimeUtils from "../../../../utils/TimeUtils";
 import Utils from "../../../../utils/Utils";
-import Connect from "../../../../backend/api/Connect";
 import AdminRefreshTokenDetails from "./AdminRefreshTokenDetails";
 
 export interface AdminSessionViewProps extends ModalProps {
@@ -150,7 +150,7 @@ const AdminSessionDetails: React.FC<AdminSessionViewProps> = observer(({ session
                     </Row>
                 </Container>
                 <Padding all={16}>
-                    <Column crossAxis="flex-start" style={{gap: "20px"}}>
+                    <Column crossAxis="flex-start" gap="20px">
                         <Container width="100%">
                             <Text text="Session Timeline" size={12} color={AppTheme.hint} />
                             <SizedBox height={12} />
@@ -199,7 +199,7 @@ const AdminSessionDetails: React.FC<AdminSessionViewProps> = observer(({ session
                                         }
                                         height={10}
                                         color={AppTheme.hint}
-                                        showBottom={steps.length - 1 !== index}
+                                        showBottom={details.length - 1 !== index}
                                     />
                                 )
                             })}

@@ -1,11 +1,11 @@
 import { BackdropLoader, Column, Container, Notify, SizedBox, Text } from "@serchservice/web-ui-kit";
 import { observer } from "mobx-react-lite";
 import React from "react";
+import Connect from "../../../../backend/api/Connect";
+import { TeamResponse } from "../../../../backend/models/profile/TeamResponse";
 import AppTheme from "../../../../configuration/Theme";
 import PermissionTable, { UpdatePermissionRequest } from "../../../../widgets/PermissionTable";
 import { AdminInterface } from "../page";
-import Connect from "../../../../backend/api/Connect";
-import { TeamResponse } from "../../../../backend/models/profile/TeamResponse";
 
 const AdminPermissionView: React.FC<AdminInterface> = observer(({ admin, onAdminUpdated }) => {
     const headers = ["Scopes", "Read", "Write", "Update", "Delete"]
@@ -57,7 +57,7 @@ const AdminPermissionView: React.FC<AdminInterface> = observer(({ admin, onAdmin
     const buildSpecific = () => {
         if(admin.team.specific && admin.team.specific.length > 0) {
             return (
-                <Column style={{gap: "20px"}} mainAxisSize="max">
+                <Column gap="20px" mainAxisSize="max">
                     {admin.team.specific.map((spec, index) => {
                         return (
                             <React.Fragment key={index}>

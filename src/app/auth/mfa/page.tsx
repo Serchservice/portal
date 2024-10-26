@@ -6,19 +6,8 @@ import MFASetup from "../../../backend/models/auth/MFASetup";
 import mfaSetupStore from "../../../backend/database/auth/MFASetupStore";
 import Title from "../../../widgets/Title";
 import {
-    useDesign,
-    Column,
-    Container,
-    HorizontalLoader,
-    SizedBox,
-    OtpField,
-    ActionButton,
-    Image,
-    Text,
-    Row,
-    Navigate,
-    Notify,
-    Utility
+    useDesign, Column, Container, HorizontalLoader, SizedBox, OtpField, ActionButton,
+    Image, Text, Row, Navigate, Notify, Utility
 } from "@serchservice/web-ui-kit";
 import Assets from "../../../assets/Assets";
 import authStore from "../../../backend/database/auth/AuthStore";
@@ -30,12 +19,14 @@ import { ConnectifyUtils } from "@serchservice/connectify";
 import Utils from "../../../utils/Utils";
 import Auth from "../../../backend/models/auth/Auth";
 
-export const MFAuthRoute: RouteInterface = {
-    path: "/auth/mfa",
-    page: <MFAuthPage />,
+export default function MFAuthRoute(): RouteInterface {
+    return {
+        path: "/auth/mfa",
+        page: (<Layout />),
+    }
 }
 
-export default function MFAuthPage() {
+const Layout: React.FC = observer(() => {
     const steps: Step[] = [
         {
             step: 0,
@@ -67,7 +58,7 @@ export default function MFAuthPage() {
             <View current={step} steps={steps} onStepUpdated={setStep}/>
         </AuthLayout>
     )
-}
+})
 
 interface Step {
     step: number;
@@ -158,12 +149,7 @@ const View: React.FC<ViewProps> = observer(({ current, steps, onStepUpdated }) =
             return (
                 <React.Fragment>
                     <SizedBox height={20} />
-                    <Image
-                        image={mfaSetupStore.read.qr_code}
-                        width="100%"
-                        height="300px"
-                        objectFit="contain"
-                    />
+                    <Image image={mfaSetupStore.read.qr_code} width="100%" height="300px" objectFit="contain" />
                     <SizedBox height={20} />
                     <Text text="Scan QrCode to setup MFA or copy the setup key" color={AppTheme.hint} />
                     <SizedBox height={20} />
@@ -173,11 +159,7 @@ const View: React.FC<ViewProps> = observer(({ current, steps, onStepUpdated }) =
                         borderRadius="10px"
                         onClick={handleCopy}
                     >
-                        <Text
-                            text={`${mfaSetupStore.read.secret} (Tap to Copy)`}
-                            color={AppTheme.hint}
-                            size={12}
-                        />
+                        <Text text={`${mfaSetupStore.read.secret} (Tap to Copy)`} color={AppTheme.hint} size={12} />
                     </Container>
                     <SizedBox height={20} />
                     <Text text="You can skip this if this is not enforced on your account" color={AppTheme.hint} />

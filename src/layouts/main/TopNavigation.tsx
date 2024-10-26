@@ -15,8 +15,6 @@ import Connect from "../../backend/api/Connect";
 import authStore from "../../backend/database/auth/AuthStore";
 import AuthRouting from "../../configuration/AuthRouting";
 import Utils from "../../utils/Utils";
-import { GrantedPermissionRoute } from "../../app/profile/permission/granted/page";
-import { RequestedPermissionRoute } from "../../app/profile/permission/requested/page";
 
 const TopNavigation: React.FC<NavigationInterface> = observer(({ current }) => {
     return (
@@ -305,13 +303,13 @@ const ProfileView: React.FC<NavigationInterface> = observer(({ current }) => {
             title: "Granted Permissions",
             description: "See your portal capabilities.",
             icon: "solar:server-square-update-bold-duotone",
-            link: GrantedPermissionRoute.path
+            link: Routing.instance.grantedPermission.path
         },
         {
             title: "Requested Permissions",
             description: "Track your permission requests.",
             icon: "ph:read-cv-logo-duotone",
-            link: RequestedPermissionRoute.path
+            link: Routing.instance.requestedPermission.path
         },
         {
             title: "Sign out",

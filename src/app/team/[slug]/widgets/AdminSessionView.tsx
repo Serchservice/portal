@@ -6,8 +6,8 @@ import AccountSessionResponse from "../../../../backend/models/account/AccountSe
 import AdminScopeResponse from "../../../../backend/models/team/AdminScopeResponse";
 import AppTheme from "../../../../configuration/Theme";
 import Filters, { IFilter, IFilterOption } from "../../../../utils/Filters";
-import { AdminInterface } from "../page";
 import AdminSessionDetails from "../modals/AdminSessionDetails";
+import { AdminInterface } from "../page";
 
 const AdminSessionView: React.FC<AdminInterface> = observer(({ admin, onAdminUpdated }) => {
     const [list, setList] = React.useState<AccountSessionResponse[]>(admin.sessions)
@@ -132,7 +132,7 @@ const AdminSessionView: React.FC<AdminInterface> = observer(({ admin, onAdminUpd
             )}
             {filter && (<SizedBox height={10} />)}
             {filter && (
-                <Row crossAxis="center" style={{gap: "10px"}}>
+                <Row crossAxis="center" gap="10px">
                     <Text text="Current Filter" color={AppTheme.hint} size={13} />
                     <Row crossAxis="center" crossAxisSize="min" mainAxisSize="min" style={{backgroundColor: AppTheme.appbar, borderRadius: "10px", padding: "6px 6px 4px", gap: "10px"}}>
                         <Text text={filter} color={AppTheme.hint} size={13} />

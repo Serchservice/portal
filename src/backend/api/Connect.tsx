@@ -15,8 +15,8 @@ class Connect {
     constructor(options: ConnectProps) {
         this.api = new Connectify({
             withAuth: options.withAuth,
-            // baseUrl: 'http://192.168.43.153:8080/api/v1',
-            mode: "production",
+            baseUrl: 'http://192.168.43.153:8080/api/v1',
+            mode: "sandbox",
             withLog: true,
             session: authStore.read.session,
             defaultPath: AuthRouting.instance.login.path,

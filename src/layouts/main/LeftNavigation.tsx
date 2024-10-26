@@ -9,6 +9,7 @@ import { NavigationInterface } from "./MainLayout";
 import React from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { NavigationLinkInterface, NavigationLinkOptionInterface, NavigationLinks, NavigationSubLinkInterface } from "./NavigationLink";
+import { CURRENT_VERSION } from "../../generator/getVersion";
 
 const LeftNavigation: React.FC<NavigationInterface> = observer(({ current }) => {
     const { isMobile } = useDesign();
@@ -41,6 +42,8 @@ const LeftNavigation: React.FC<NavigationInterface> = observer(({ current }) => 
                     )
                 })}
                 <Spacer />
+                <Text text={CURRENT_VERSION} color={AppTheme.hint} size={12} />
+                <SizedBox height={6} />
                 <Row mainAxisSize="max" crossAxisSize="min" mainAxis="flex-end" style={{paddingRight: isNavWide ? "10px" : ""}}>
                     <ExtraButton
                         icon={"pepicons-print:arrow-right"}
@@ -114,23 +117,26 @@ const MoreView: React.FC<ViewInterface> = observer(({ current, isNavWide, navLin
                         setAnchor(event.currentTarget as HTMLButtonElement)
                     }
                 }}
-                link={(isNavWide || (!isNavWide && !options)) ? navLink.link : undefined}
                 width={isNavWide ? "100%" : "auto"}
                 borderRadius={isNavWide ? "0" : "8px"}
                 padding={isNavWide ? "8px 12px" : "4px"}
             >
                 <Row mainAxisSize="max" crossAxisSize="min" mainAxis="flex-start">
-                    <Icon
-                        icon={isCurrent ? navLink.activeIcon : navLink.icon}
-                        color={isCurrent ? AppTheme.secondary : AppTheme.hint}
-                        width="1.3em"
-                        style={{margin: isNavWide ? "0 6px 0 0" : "0"}}
-                    />
-                    {isNavWide && (<SizedBox width={10} />)}
-                    {isNavWide && (
-                        <Text text={navLink.header} color={isCurrent ? AppTheme.secondary : AppTheme.hint} />
-                    )}
-                    {(isNavWide && options) && (<Spacer />)}
+                    <Container width="100%" link={(isNavWide || (!isNavWide && !options)) ? navLink.link : undefined} style={{cursor: "pointer"}}>
+                        <Row mainAxisSize="max" crossAxisSize="min" mainAxis="flex-start">
+                            <Icon
+                                icon={isCurrent ? navLink.activeIcon : navLink.icon}
+                                color={isCurrent ? AppTheme.secondary : AppTheme.hint}
+                                width="1.3em"
+                                style={{margin: isNavWide ? "0 6px 0 0" : "0"}}
+                            />
+                            {isNavWide && (<SizedBox width={10} />)}
+                            {isNavWide && (
+                                <Text text={navLink.header} color={isCurrent ? AppTheme.secondary : AppTheme.hint} />
+                            )}
+                            {(isNavWide && options) && (<Spacer />)}
+                        </Row>
+                    </Container>
                     {(isNavWide && options) && (
                         <ExtraButton
                             icon="ep:arrow-right"
@@ -172,7 +178,7 @@ const MoreView: React.FC<ViewInterface> = observer(({ current, isNavWide, navLin
                                     )}
                                     {option.title && (<SizedBox height={10} />)}
                                     {option.links.map((link, index) => {
-                                        return (<MoreChildView current={current} child={link} key={index} />)
+                                        return (<MoreChildView current={current} child={link} key={index} handleClose={close} />)
                                     })}
                                 </Column>
                             </Container>
@@ -186,9 +192,10 @@ const MoreView: React.FC<ViewInterface> = observer(({ current, isNavWide, navLin
 
 interface MoreChildViewProps extends NavigationInterface {
     child: NavigationSubLinkInterface;
+    handleClose: () => void;
 }
 
-const MoreChildView: React.FC<MoreChildViewProps> = observer(({ child, current }) => {
+const MoreChildView: React.FC<MoreChildViewProps> = observer(({ child, current, handleClose }) => {
     const isCurrent = current?.path === child.link || (
         current?.path.startsWith(child.link)
         && child.link !== '/' && current.path !== '/'
@@ -200,7 +207,7 @@ const MoreChildView: React.FC<MoreChildViewProps> = observer(({ child, current }
             padding="10px"
             width="100%"
             backgroundColor={isCurrent ? AppTheme.primary : "transparent"}
-            onClick={() => close()}
+            onClick={handleClose}
             link={child.link}
             hoverBackgroundColor={isCurrent ? AppTheme.primary : AppTheme.hover}
         >
